@@ -1,5 +1,7 @@
 using System;
+using Avalonia.Controls;
 using gLibrary.Engine;
+using gLibrary.Models;
 
 namespace TicTacToe.Game;
 
@@ -20,34 +22,33 @@ public GameController(GridEngine engine)
     _player2 = new Player(2);
     _currentPlayer = _player1;
     _movesMade = 0;
-    _gameOver = false;  // Inicializace stavu hry
+    _gameOver = false;
 }
 
 public bool MakeMove(int row, int col)
 {
     if (_gameOver)
     {
-        return false;  // Pokud je hra skončena, nic neudělej
+        return false;
     }
 
-    if (_engine.GetCellValue(row, col) == 0) // Buňka je volná
+    if (_engine.GetCellValue(row, col) == 0)
     {
         _engine.SetCellValue(row, col, _currentPlayer.PlayerValue);
         _movesMade++;
 
         if (CheckWin(row, col, _currentPlayer.PlayerValue))
         {
-            _gameOver = true; // Hra skončila
+            _gameOver = true; 
             return true;
         }
 
-        if (_movesMade == _engine.Rows * _engine.Columns) // Remíza
+        if (_movesMade == _engine.Rows * _engine.Columns)
         {
             _gameOver = true;
             return true;
         }
 
-        // Střídání hráčů
         _currentPlayer = _currentPlayer == _player1 ? _player2 : _player1;
     }
 
@@ -56,8 +57,8 @@ public bool MakeMove(int row, int col)
 
     private bool CheckWin(int row, int col, int player)
     {
-        return CheckLine(row, 0, 0, 1, player) || CheckLine(0, col, 1, 0, player) || (row == col && CheckLine(0, 0, 1, 1, player)) || // diagonála \
-               (row + col == _engine.Rows - 1 && CheckLine(0, _engine.Columns - 1, 1, -1, player)); // diagonála /
+        return CheckLine(row, 0, 0, 1, player) || CheckLine(0, col, 1, 0, player) || (row == col && CheckLine(0, 0, 1, 1, player)) || //  \
+               (row + col == _engine.Rows - 1 && CheckLine(0, _engine.Columns - 1, 1, -1, player)); //  /
     }
 
     private bool CheckLine(int startRow, int startCol, int dRow, int dCol, int player)

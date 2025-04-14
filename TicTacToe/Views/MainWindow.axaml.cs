@@ -5,6 +5,8 @@ using gLibrary.Helping;
 using TicTacToe.Game;
 using TicTacToe.Game.Mapping;
 using gLibrary.Events;
+using gLibrary.Communication;
+using Avalonia.Threading;
 
 namespace TicTacToe.Views;
 
@@ -17,11 +19,13 @@ public partial class MainWindow : Window
     private TicTacToeMapper _mapper;
     private GameController _gameController;
     private int _size;
+    private WebSocketManager _webSocketManager;
 
     public MainWindow()
     {
         InitializeComponent();
         InitializeGrid();
+        InitWebSocket();
     }
 
     private void InitializeGrid()
@@ -38,10 +42,29 @@ public partial class MainWindow : Window
         _gameController = new GameController(_engine);
     }
 
+    private async void InitWebSocket()
+    {
+        _webSocketManager = new WebSocketManager();
+        _webSocketManager.OnMessageReceived += (row, col) =>
+        {
+            Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                _gameController.MakeMove(row, col);
+                _squareRenderer.UpdateCell(row, col);
+            });
+        };
+
+        await _webSocketManager.InitializeAsync(""); //server IP add
+    }
+
     public void OnClick(object? sender, CellClickEventArgs args)
     {
         int row = args.Cell.Row;
         int col = args.Cell.Column;
+        if (_webSocketManager?.IsConnected == true)
+        {
+            _webSocketManager.Send(row, col);
+        }
         _gameController.MakeMove(row, col);
         _renderer.RenderGrid(_engine, _mapper, _size);
     }

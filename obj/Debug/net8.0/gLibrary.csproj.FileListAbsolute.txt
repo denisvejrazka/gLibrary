@@ -12,3 +12,4 @@
 /Users/denisvejrazka/Projects/gLibrary/obj/Debug/net8.0/Avalonia/gLibrary.dll
 /Users/denisvejrazka/Projects/gLibrary/obj/Debug/net8.0/Avalonia/gLibrary.pdb
 /Users/denisvejrazka/Projects/gLibrary/obj/Debug/net8.0/refint/Avalonia/gLibrary.dll
+/Users/denisvejrazka/Projects/gLibrary/obj/Debug/net8.0/gLibrary.sourcelink.json
