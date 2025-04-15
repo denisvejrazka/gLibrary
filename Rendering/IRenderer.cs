@@ -9,6 +9,7 @@ namespace gLibrary.Rendering
     {
         event EventHandler<CellClickEventArgs> CellClicked;
         event EventHandler<CellHoverEventArgs>? CellHovered;
+        void UpdateCell(int row, int col);
         void RenderGrid(GridEngine engine, IMap mapper, int cellSize);
     }
 }
