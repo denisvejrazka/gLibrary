@@ -69,7 +69,7 @@ namespace gLibrary.Helping
             return !(hasNegative && hasPositive); 
         }
 
-        public override List<(int, int)> GetNeighbors(int row, int col)
+        public override List<(int row, int col)> GetNeighbors(int row, int col)
         {
             var neighbors = new List<(int row, int col)>();
             var directions = new (int, int)[] { (0, -1), (0, 1), ((col + row) % 2 == 0 ? (1, 0) : (-1, 0))};

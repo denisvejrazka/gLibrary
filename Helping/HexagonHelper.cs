@@ -35,7 +35,7 @@ namespace gLibrary.Helping
             return (row, col);
         }
 
-        public override List<(int, int)> GetNeighbors(int row, int col)
+        public override List<(int row, int col)> GetNeighbors(int row, int col)
         {
             var neighbors = new List<(int, int)>();
 
