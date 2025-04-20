@@ -90,7 +90,7 @@ namespace gLibrary.Rendering
             {
                 Text = cell.Text.ToString(),
                 Foreground = Brushes.Black,
-                FontSize = cellSize * 0.3,
+                FontSize = cellSize * 0.22,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
             };

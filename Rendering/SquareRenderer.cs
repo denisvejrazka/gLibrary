@@ -43,8 +43,7 @@ namespace gLibrary.Rendering
             CellHovered = OnHover;
 
         }
-
-        // hover (zvýraznění mohu dělat v rendereru)
+        
         private Control GetCellRepresentation(int row, int col, int cellSize)
         {
             int value = _engine.GetCellValue(row, col);
