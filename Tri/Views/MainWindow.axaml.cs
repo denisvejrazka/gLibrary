@@ -35,7 +35,7 @@ namespace Tri.Views
         private void InitializeGrid()
         {
             _size = 70;
-            _engine = new GridEngine(15, 25);
+            _engine = new GridEngine(6, 6);
             _engine.GenerateGrid();
 
             blacklist = new List<(int, int)>();
@@ -125,43 +125,34 @@ namespace Tri.Views
 
         private void GetNeighborValues(int row, int col)
         {
-            var neighbors = _triangleHelper.GetNeighbors(row, col);
+            var neighbors = _triangleHelper.GetNeighbors(row, col)
+                                        .Where(n => !blacklist.Contains(n) && _engine.GetCellValue(n.Item1, n.Item2) == 0)
+                                        .ToList();
+
+            if (neighbors.Count == 0) return;
+
             notPrimes = new List<(int, int)>();
+
+            //random neighbor for the prime
+            var primeNeighbor = neighbors[random.Next(neighbors.Count)];
+            _engine.SetCellValue(primeNeighbor.Item1, primeNeighbor.Item2, GenerateRandomPrime());
+            _triangleRenderer.UpdateCell(primeNeighbor.Item1, primeNeighbor.Item2);
+
+            //the rest are just numbers not primes
             foreach (var (nRow, nCol) in neighbors)
             {
-                if (!blacklist.Contains((nRow, nCol)) && _engine.GetCellValue(nRow, nCol) == 0)
+                if ((nRow, nCol) == primeNeighbor) continue;
+
+                int value;
+                do
                 {
-                    _engine.SetCellValue(nRow, nCol, random.Next(2, 97));
-                    var primeNeighbor = neighbors[random.Next(0, neighbors.Count)];
+                    value = random.Next(2, 97);
+                } while (IsPrime(value)); // repeat until its not regular number
 
-                    if (_engine.GetCellValue(primeNeighbor.row, primeNeighbor.col) == 0)
-                    {
-                        _engine.SetCellValue(primeNeighbor.row, primeNeighbor.col, GenerateRandomPrime());
-                        _triangleRenderer.UpdateCell(primeNeighbor.row, primeNeighbor.col);
-                    }
-
-                    _triangleRenderer.UpdateCell(nRow, nCol);
-                }
+                _engine.SetCellValue(nRow, nCol, value);
+                _triangleRenderer.UpdateCell(nRow, nCol);
             }
         }
-
-        // private bool AllPrimes()
-        // {
-        //     List<int> cellValues = new List<int>();
-        //     for (int i = 0; i < _engine.Rows; i++)
-        //     {
-        //         for (int j = 0; j < _engine.Columns; j++)
-        //         {
-        //             int cellValue = _engine.GetCellValue(i, j);
-        //             cellValues.Add(cellValue);
-        //         }
-        //     }
-
-        //     if (cellValues.Any(v => IsPrime(v)) && cellValues.Any(v => v != 0) && cellValues.Any(v => v != 99))
-        //         return true;
-        //     else
-        //         return false;
-        // }
 
         private bool AnyPrimesLeft()
         {
