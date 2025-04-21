@@ -9,6 +9,7 @@ using Avalonia.Input;
 using gLibrary.Events;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
 
 namespace Tri.Views
 {
@@ -19,10 +20,12 @@ namespace Tri.Views
         private TriangleHelper _triangleHelper;
         private TriangleRenderer _triangleRenderer;
         private TriMapper _mapper;
-        private TriGameController _gameController;
         private int _size;
-        private bool _cleared;
+        public Random random = new Random();
+        private int _score = 0;
 
+        private List<(int, int)> blacklist;
+        private List<(int, int)> notPrimes;
         public MainWindow()
         {
             InitializeComponent();
@@ -32,108 +35,146 @@ namespace Tri.Views
         private void InitializeGrid()
         {
             _size = 70;
-            _engine = new GridEngine(4, 2);
+            _engine = new GridEngine(15, 25);
             _engine.GenerateGrid();
-            _cleared = false;
 
+            blacklist = new List<(int, int)>();
+            
             for (int i = 0; i < _engine.Rows; i++)
             {
                 for (int j = 0; j < _engine.Columns; j++)
                 {
-                    _engine.SetCellValue(i, j, 2);
-                    _cleared = true;
+                    _engine.SetCellValue(i, j, 0);
                 }
             }
-
-            // var predefinedPairs = new (int row, int col, int dRow, int dCol, int value)[]
-            // {
-            //     (0, 0, 0, 1, 0), // 1-1 vodorovně
-            //     (0, 2, 1, 0, 0), // 0-0 svisle
-            //     (1, 1, 0, 1, 1), // 1-1 vodorovně
-            //     (2, 0, 1, 0, 0), // 0-0 svisle
-            // };
-
-            // foreach (var (row, col, dRow, dCol, value) in predefinedPairs)
-            // {
-            //     int r1 = row;
-            //     int c1 = col;
-            //     int r2 = row + dRow;
-            //     int c2 = col + dCol;
-
-            //     if (IsInside(r1, c1) && IsInside(r2, c2))
-            //     {
-            //         _engine.SetCellValue(r1, c1, value);
-            //         _engine.SetCellValue(r2, c2, value);
-            //     }
-            // }
 
             _mapper = new TriMapper();
             _triangleHelper = new TriangleHelper(_engine);
             _triangleRenderer = new TriangleRenderer(TriBackground, _size, 0.5, _triangleHelper, _engine, _mapper, OnClick);
-            _gameController = new TriGameController(_engine, _triangleHelper);
             _renderer = new Renderer(_triangleRenderer);
             _renderer.RenderGrid(_engine, _mapper, _size);
         }
 
-        // public void OnClick(object? sender, CellClickEventArgs args)
-        // {
-        //     int row = args.Cell.Row;
-        //     int col = args.Cell.Column;
+        public static bool IsPrime(int number)
+        {
+            if (number <= 1)
+                return false;
+            if (number == 2)
+                return true;
+            if (number % 2 == 0)
+                return false;
 
-        //     int value = args.MouseButton switch
-        //     {
-        //         MouseButton.Left => 1,
-        //         MouseButton.Right => 0,
-        //         _ => 2
-        //     };
+            int boundary = (int)Math.Sqrt(number);
 
-        //     int initialValue = _engine.GetCellValue(row, col);
-        //     List<int> neighborValues = new List<int>();
-        //     List<(int, int)> neighbors = _triangleHelper.GetNeighbors(row, col);
-            
-        //     foreach (var (nRow, nCol) in neighbors)
-        //     {
-        //         neighborValues.Add(_engine.GetCellValue(nRow, nCol));
-        //     }
+            for (int i = 3; i <= boundary; i += 2)
+            {
+                if (number % i == 0)
+                    return false;
+            }
 
-        //     if (neighborValues.Contains(initialValue) && neighborValues.RemoveAll(n => n == 0) && neighbors.Count == 3)
-        //     {
-        //         _engine.SetCellValue(row, col, value);
-        //     }
-        // }
-        
+            return true;
+        }
+
+        private void UpdateScoreText()
+        {
+            ScoreText.Text = $"Skóre: {_score}";
+        }
+
         public void OnClick(object? sender, CellClickEventArgs args)
         {
             int row = args.Cell.Row;
             int col = args.Cell.Column;
 
-            int newValue = args.MouseButton switch
+            if (IsPrime(_engine.GetCellValue(row, col)) && !blacklist.Contains((row, col)))
             {
-                MouseButton.Left => 1,
-                MouseButton.Right => 0,
-                _ => 2
-            };
+                _engine.SetCellValue(row, col, 1);
+                _triangleRenderer.UpdateCell(row, col);
+                GetNeighborValues(row, col);
+                blacklist.Add((row, col));
+                _score++;
+                UpdateScoreText();
+            }
+            else if (_engine.GetCellValue(row, col) == 0)
+            {
+                _engine.SetCellValue(row, col, 1);
+                _triangleRenderer.UpdateCell(row, col);
+                GetNeighborValues(row, col);
+                blacklist.Add((row, col));
+            }
+            else 
+            {
+                _engine.SetCellValue(row, col, 99);
+                _engine.GetCellValue(row, col);
+                _triangleRenderer.UpdateCell(row, col);
+                blacklist.Add((row, col));
+                notPrimes.Add((row, col));
+            }            
 
-            int currentValue = _engine.GetCellValue(row, col);
+            if (!AnyPrimesLeft())
+            {
+                EndGameMessage.IsVisible = true;
+            }
+        }
 
+        private int GenerateRandomPrime()
+        {
+            int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
+                            43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
+            return primes[random.Next(primes.Length)];
+        }
+
+        private void GetNeighborValues(int row, int col)
+        {
             var neighbors = _triangleHelper.GetNeighbors(row, col);
-            int sameValueCount = 0;
-
+            notPrimes = new List<(int, int)>();
             foreach (var (nRow, nCol) in neighbors)
             {
-                int neighborValue = _engine.GetCellValue(nRow, nCol);
-                if (neighborValue == currentValue)
+                if (!blacklist.Contains((nRow, nCol)) && _engine.GetCellValue(nRow, nCol) == 0)
                 {
-                    sameValueCount++;
+                    _engine.SetCellValue(nRow, nCol, random.Next(2, 97));
+                    var primeNeighbor = neighbors[random.Next(0, neighbors.Count)];
+
+                    if (_engine.GetCellValue(primeNeighbor.row, primeNeighbor.col) == 0)
+                    {
+                        _engine.SetCellValue(primeNeighbor.row, primeNeighbor.col, GenerateRandomPrime());
+                        _triangleRenderer.UpdateCell(primeNeighbor.row, primeNeighbor.col);
+                    }
+
+                    _triangleRenderer.UpdateCell(nRow, nCol);
                 }
             }
+        }
 
-            // Pokud má právě jednoho souseda se stejnou hodnotou, nastav novou hodnotu
-            if (sameValueCount == 1)
+        // private bool AllPrimes()
+        // {
+        //     List<int> cellValues = new List<int>();
+        //     for (int i = 0; i < _engine.Rows; i++)
+        //     {
+        //         for (int j = 0; j < _engine.Columns; j++)
+        //         {
+        //             int cellValue = _engine.GetCellValue(i, j);
+        //             cellValues.Add(cellValue);
+        //         }
+        //     }
+
+        //     if (cellValues.Any(v => IsPrime(v)) && cellValues.Any(v => v != 0) && cellValues.Any(v => v != 99))
+        //         return true;
+        //     else
+        //         return false;
+        // }
+
+        private bool AnyPrimesLeft()
+        {
+            for (int i = 0; i < _engine.Rows; i++)
             {
-                _engine.SetCellValue(row, col, newValue);
-                _triangleRenderer.UpdateCell(row, col);
+                for (int j = 0; j < _engine.Columns; j++)
+                {
+                    int value = _engine.GetCellValue(i, j);
+                    if (IsPrime(value))
+                        return true;
+                }
             }
+            return false;
         }
     }
 }

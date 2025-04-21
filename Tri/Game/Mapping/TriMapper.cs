@@ -10,10 +10,10 @@ namespace Tri.Game.Mapping
         {
             return value switch
             {
-                0 => new Cell(row, col, "#FFFFFF", value.ToString()),
-                1 => new Cell(row, col, "#FFFFFF", 1.ToString()),
-                2 => new Cell(row, col, "#FFFFFF"),
-                _ => throw new NotImplementedException()
+                0 => new Cell(row, col, "#FFFFFF", ""),
+                1 => new Cell(row, col, "#deffe7"),
+                99 => new Cell(row, col, "#ff0019"),
+                _ => new Cell(row, col, "#FFFFFF", value.ToString())
             };
         }
     }
