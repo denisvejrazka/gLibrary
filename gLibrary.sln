@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe", "TicTacToe\TicT
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tri", "Tri\Tri.csproj", "{1B21458F-9446-4E79-9DDD-E1B1C48D4001}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemTest", "MemTest\MemTest.csproj", "{72A6E90A-0CA3-496D-9BBF-099480810070}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{1B21458F-9446-4E79-9DDD-E1B1C48D4001}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B21458F-9446-4E79-9DDD-E1B1C48D4001}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B21458F-9446-4E79-9DDD-E1B1C48D4001}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72A6E90A-0CA3-496D-9BBF-099480810070}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72A6E90A-0CA3-496D-9BBF-099480810070}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72A6E90A-0CA3-496D-9BBF-099480810070}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72A6E90A-0CA3-496D-9BBF-099480810070}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

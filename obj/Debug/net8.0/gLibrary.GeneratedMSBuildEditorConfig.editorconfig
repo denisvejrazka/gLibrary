@@ -19,6 +19,12 @@ build_property.ProjectDir = /Users/denisvejrazka/Projects/gLibrary/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
+[/Users/denisvejrazka/Projects/gLibrary/MemTest/App.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/Users/denisvejrazka/Projects/gLibrary/MemTest/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [/Users/denisvejrazka/Projects/gLibrary/TicTacToe/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
