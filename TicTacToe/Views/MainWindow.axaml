@@ -3,10 +3,9 @@
         xmlns:vm="using:TicTacToe.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        CanResize="False"
         x:Class="TicTacToe.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        xmlns:control="clr-namespace:TicTacToe.Game"
         Title="TicTacToe">
 
     <Design.DataContext>
@@ -15,6 +14,12 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Canvas x:Name="TicTacToeBackground" />
-
+    <Border Padding="20">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+                <Canvas x:Name="TicTacToeBackground" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <Button Content="Save Game" Click="SaveButton_Click"/>
+                <Button Content="Load Game" Click="LoadButton_Click"/>
+            </StackPanel>
+    </Border>
+    
 </Window>

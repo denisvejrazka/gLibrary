@@ -34,13 +34,31 @@ namespace gLibrary.Engine
         public int GetCellValue(int row, int col) => (row >= 0 && row < Rows && col >= 0 && col < Columns) 
             ? Matrix[row, col] : throw new IndexOutOfRangeException("Invalid cell coordinates.");
 
-        public int[,] ExportValues()
+        public int[,] ExportGrid()
         {
-            int[,] matrix = new int[Rows, Columns];
-            for (int r = 0; r < Rows; r++)
-                for (int c = 0; c < Columns; c++)
-                    matrix[r, c] = Matrix[r, c];
-            return matrix;
+            var copy = new int[Rows, Columns];
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    copy[i, j] = GetCellValue(i, j);
+                }
+            }
+            return copy;
+        }
+
+        public void SetGrid(int[,] newGrid)
+        {
+            if (newGrid.GetLength(0) != Rows || newGrid.GetLength(1) != Columns)
+                throw new ArgumentException("Grid size does not match.");
+
+            for (int i = 0; i < Rows; i++)
+            {
+                for (int j = 0; j < Columns; j++)
+                {
+                    SetCellValue(i, j, newGrid[i, j]);
+                }
+            }
         }
     }
 }

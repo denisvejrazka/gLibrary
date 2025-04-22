@@ -14,30 +14,16 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <!-- <StackPanel>
-    <Canvas x:Name="MemBackground" />
-    <TextBlock x:Name="EndGameMessage"
-           Text="Hra skončila – žádná prvočísla nezbyla!"
-           Foreground="Red"
-           FontSize="20"
-           FontWeight="Bold"
-           HorizontalAlignment="Center"
-           IsVisible="False"
-           Margin="0,10,0,0"/>
-    </StackPanel> -->
     <Border Padding="20">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock x:Name="EndGameMessage"
-                       Text="Špatné kliknutí! Skóre: 0"
-                       Foreground="Red"
+            <TextBlock x:Name="EndGameMessage" Text="Špatné kliknutí! Skóre: 0" Foreground="Red"
                        FontSize="20"
                        FontWeight="Bold"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,10"/>
             
-            <Canvas x:Name="MemBackground"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"/>
+            <Canvas x:Name="MemBackground" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         </StackPanel>
     </Border>
+
 </Window>

@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-
 namespace MemTest.Views;
 
 public partial class MainWindow : Window
@@ -33,19 +32,15 @@ public partial class MainWindow : Window
         _size = 70;
         _engine = new GridEngine(3, 3);
         _engine.GenerateGrid();
-        int size = 70; // velikost buňky
         int rows = _engine.Rows;
         int cols = _engine.Columns;
 
-        int canvasWidth = cols * size;
-        int canvasHeight = rows * size;
-
+        int canvasWidth = cols * _size;
+        int canvasHeight = rows * _size;
         MemBackground.Width = canvasWidth;
         MemBackground.Height = canvasHeight;
-
-        // Nastavit velikost okna s lehkým paddingem
-        this.Width = canvasWidth + 80;   // 2x Padding + rezerva
-        this.Height = canvasHeight + 120; // + výška textu a mezera
+        this.Width = canvasWidth + 80; 
+        this.Height = canvasHeight + 80;
         
         InitializeGrid();
         StartGame();
@@ -53,15 +48,9 @@ public partial class MainWindow : Window
 
     private void InitializeGrid()
     {
-        
-        
         for (int i = 0; i < _engine.Rows; i++)
-        {
             for (int j = 0; j < _engine.Columns; j++)
-            {
                 _engine.SetCellValue(i, j, 0);
-            }
-        }
 
         _mapper = new MemMapper();
         _squareHelper = new SquareHelper(_engine);
@@ -73,20 +62,15 @@ public partial class MainWindow : Window
     public async void OnClick(object? sender, CellClickEventArgs args)
     {
         if (!_isPlayerTurn) return;
-
         int row = args.Cell.Row;
         int col = args.Cell.Column;
-
         _playerInput.Add((row, col));
-
-        // rozsvítit na kliknutí
         _engine.SetCellValue(row, col, 1);
-        _renderer.RenderGrid(_engine, _mapper, _size);
+        _squareRenderer.UpdateCell(row, col);
         await Task.Delay(200);
         _engine.SetCellValue(row, col, 0);
-        _renderer.RenderGrid(_engine, _mapper, _size);
+        _squareRenderer.UpdateCell(row, col);
 
-        // kontrola správnosti
         if (_sequence[_currentStep] != (row, col))
         {
             EndGame("Špatné kliknutí! Skóre: " + _score);
@@ -95,7 +79,7 @@ public partial class MainWindow : Window
 
         _currentStep++;
 
-        // hotovo?
+        // done?
         if (_currentStep >= _sequence.Count)
         {
             _score++;
@@ -112,12 +96,13 @@ public partial class MainWindow : Window
         {
             _engine.SetCellValue(row, col, 1);
             _squareRenderer.UpdateCell(row, col);
-            await Task.Delay(600); // světlo zapnuto
+            await Task.Delay(600);
 
             _engine.SetCellValue(row, col, 0);
-            _renderer.RenderGrid(_engine, _mapper, _size);
-            await Task.Delay(200); // pauza mezi světly
+            _squareRenderer.UpdateCell(row, col);
+            await Task.Delay(200);
         }
+
         _playerInput.Clear();
         _currentStep = 0;
         _isPlayerTurn = true;

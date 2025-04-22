@@ -1,25 +1,35 @@
 using System;
 using System.IO;
 using System.Text.Json;
-
-namespace gLibrary.Saves;
-
-public class GameStateManager
+using gLibrary.Saves;
+namespace gLibrary.Saves
 {
-    private const string SaveFilePath = "Saves/GameStateManager.cs/saved_game.json";
-
-    public void SaveGame(GameState state)
+    public class GameStateManager
     {
-        string json = JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(SaveFilePath, json);
-    }
+        private const string DefaultSavePath = "Saves/saved_game.json";
 
-    public GameState? LoadGame()
-    {
-        if (!File.Exists(SaveFilePath))
-            return null;
+        public void SaveGame(GridState state, string? filePath = null)
+        {
+            string path = filePath ?? DefaultSavePath;
+            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
 
-        string json = File.ReadAllText(SaveFilePath);
-        return JsonSerializer.Deserialize<GameState>(json);
+            var json = JsonSerializer.Serialize(state, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            File.WriteAllText(path, json);
+        }
+
+        public GridState? LoadGame(string? filePath = null)
+        {
+            string path = filePath ?? DefaultSavePath;
+
+            if (!File.Exists(path))
+                return null;
+
+            var json = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<GridState>(json);
+        }
     }
 }
