@@ -23,30 +23,36 @@ namespace Tri.Views
         private int _size;
         public Random random = new Random();
         private int _score = 0;
-
         private List<(int, int)> blacklist;
         private List<(int, int)> notPrimes;
+
         public MainWindow()
         {
             InitializeComponent();
+            _size = 50;
+            _engine = new GridEngine(5, 5);
+            _engine.GenerateGrid();
+            int size = _size;
+            int rows = _engine.Rows;
+            int cols = _engine.Columns;
+            int canvasWidth = cols * size;
+            int canvasHeight = rows * size;
+            TriBackground.Width = canvasWidth;
+            TriBackground.Height = canvasHeight;
+            this.Width = canvasWidth + 80;
+            this.Height = canvasHeight + 120;
             InitializeGrid();
         }
 
         private void InitializeGrid()
         {
-            _size = 70;
-            _engine = new GridEngine(6, 6);
-            _engine.GenerateGrid();
 
             blacklist = new List<(int, int)>();
             
             for (int i = 0; i < _engine.Rows; i++)
-            {
                 for (int j = 0; j < _engine.Columns; j++)
-                {
                     _engine.SetCellValue(i, j, 0);
-                }
-            }
+
 
             _mapper = new TriMapper();
             _triangleHelper = new TriangleHelper(_engine);
@@ -67,10 +73,8 @@ namespace Tri.Views
             int boundary = (int)Math.Sqrt(number);
 
             for (int i = 3; i <= boundary; i += 2)
-            {
                 if (number % i == 0)
                     return false;
-            }
 
             return true;
         }
@@ -118,8 +122,7 @@ namespace Tri.Views
 
         private int GenerateRandomPrime()
         {
-            int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41,
-                            43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
+            int[] primes = { 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 };
             return primes[random.Next(primes.Length)];
         }
 
@@ -144,10 +147,7 @@ namespace Tri.Views
                 if ((nRow, nCol) == primeNeighbor) continue;
 
                 int value;
-                do
-                {
-                    value = random.Next(2, 97);
-                } while (IsPrime(value)); // repeat until its not regular number
+                do { value = random.Next(2, 97);} while (IsPrime(value)); // repeat until its not regular number
 
                 _engine.SetCellValue(nRow, nCol, value);
                 _triangleRenderer.UpdateCell(nRow, nCol);
@@ -157,14 +157,13 @@ namespace Tri.Views
         private bool AnyPrimesLeft()
         {
             for (int i = 0; i < _engine.Rows; i++)
-            {
                 for (int j = 0; j < _engine.Columns; j++)
                 {
                     int value = _engine.GetCellValue(i, j);
                     if (IsPrime(value))
                         return true;
                 }
-            }
+
             return false;
         }
     }
