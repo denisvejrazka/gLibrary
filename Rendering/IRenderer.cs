@@ -1,15 +1,14 @@
 using gLibrary.Engine;
 using gLibrary.Events;
 using gLibrary.Mapping;
+using gLibrary.Models;
 using System;
 
 namespace gLibrary.Rendering
 {
     public interface IRenderer
     {
-        event EventHandler<CellClickEventArgs> CellClicked;
-        event EventHandler<CellHoverEventArgs>? CellHovered;
-        void UpdateCell(int row, int col);
-        void RenderGrid(GridEngine engine, IMap mapper, int cellSize);
+        void RenderCell(int row, int col, Cell cell, int cellSize, (double x, double y) position);
+        void Clear();
     }
 }

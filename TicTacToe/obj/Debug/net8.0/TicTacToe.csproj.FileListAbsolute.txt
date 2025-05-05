@@ -76,3 +76,6 @@
 /Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/TicTacToe.genruntimeconfig.cache
 /Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/ref/TicTacToe.dll
 /Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/TicTacToe.sourcelink.json
+/Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/TicTacToe.dll
+/Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/refint/TicTacToe.dll
+/Users/denisvejrazka/Projects/gLibrary/TicTacToe/obj/Debug/net8.0/TicTacToe.pdb
