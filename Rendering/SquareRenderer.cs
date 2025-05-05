@@ -11,6 +11,7 @@ using gLibrary.Models;
 using System;
 using System.Linq;
 
+//abstract renderer
 namespace gLibrary.Rendering
 {
     public class SquareRenderer : Control, IRenderer

@@ -10,5 +10,13 @@
 using System;
 using System.Reflection;
 
+[assembly: System.Reflection.AssemblyCompanyAttribute("Tri")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+72ff129a883fa115b84ee1cd4a0bd68468e8fb46")]
+[assembly: System.Reflection.AssemblyProductAttribute("Tri")]
+[assembly: System.Reflection.AssemblyTitleAttribute("Tri")]
+[assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
+
 // Vygenerované třídou WriteCodeFragment nástroje MSBuild
 

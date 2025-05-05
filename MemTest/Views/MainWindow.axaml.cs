@@ -8,7 +8,8 @@ using MemTest.Game;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+//ještě jednu hru
+//ve vytvoreni abstraktniho modelu popsat jen obecne oddeleni, proc gridengine je obecny atd...
 namespace MemTest.Views;
 
 public partial class MainWindow : Window
