@@ -11,7 +11,7 @@ using gLibrary.Models;
 using System;
 using System.Linq;
 
-namespace gLibrary.Rendering.Avalonia;
+namespace gLibrary.Rendering.AvaloniaRenderers;
 
 // add UpdateCell(int row, int col)
 public class AvaloniaSquareRenderer : Control, IRenderer
@@ -84,15 +84,21 @@ public class AvaloniaSquareRenderer : Control, IRenderer
         _cellVisuals[(row, col)] = panel;
     }
 
-    public void UpdateCell(int row, int col, Cell cell, int cellSize, (double x, double y) position)
+    public void UpdateCell(int row, int col)
     {
+        var value = _engine.GetCellValue(row, col);
+
+        var cell = _mapper.GetMap(value, row, col);
+
+        var position = _squareHelper.GetPosition(row, col, _cellSize);
+
         if (_cellVisuals.TryGetValue((row, col), out var oldPanel))
         {
             _canvas.Children.Remove(oldPanel);
             _cellVisuals.Remove((row, col));
         }
 
-        RenderCell(row, col, cell, cellSize, position);
+        RenderCell(row, col, cell, _cellSize, position);
     }
 
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)

@@ -10,13 +10,14 @@ using gLibrary.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
+using gLibrary.Rendering.AvaloniaRenderers;
 
 namespace Tri.Views
 {
     public partial class MainWindow : Window
     {
         private GridEngine _engine;
-        private Renderer _renderer;
+        private AvaloniaTriangleRenderer _renderer;
         private TriangleHelper _triangleHelper;
         private TriangleRenderer _triangleRenderer;
         private TriMapper _mapper;
