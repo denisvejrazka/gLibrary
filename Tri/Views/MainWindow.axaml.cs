@@ -17,7 +17,7 @@ namespace Tri.Views
     public partial class MainWindow : Window
     {
         private GridEngine _engine;
-        private AvaloniaTriangleRenderer _renderer;
+        private AvaloniaTriangleRenderer _avaloniaTrianglerenderer;
         private TriangleHelper _triangleHelper;
         private TriangleRenderer _triangleRenderer;
         private TriMapper _mapper;
@@ -57,9 +57,9 @@ namespace Tri.Views
 
             _mapper = new TriMapper();
             _triangleHelper = new TriangleHelper(_engine);
-            _triangleRenderer = new TriangleRenderer(TriBackground, _size, 0.5, _triangleHelper, _engine, _mapper, OnClick);
-            _renderer = new Renderer(_triangleRenderer);
-            _renderer.RenderGrid(_engine, _mapper, _size);
+            _avaloniaTrianglerenderer = new AvaloniaTriangleRenderer(TriBackground);
+            _triangleRenderer = new TriangleRenderer(_avaloniaTrianglerenderer, _engine, _mapper, _triangleHelper, _size);
+            _triangleRenderer.RenderGrid();
         }
 
         public static bool IsPrime(int number)
@@ -93,7 +93,7 @@ namespace Tri.Views
             if (IsPrime(_engine.GetCellValue(row, col)) && !blacklist.Contains((row, col)))
             {
                 _engine.SetCellValue(row, col, 1);
-                _triangleRenderer.UpdateCell(row, col);
+                _avaloniaTrianglerenderer.UpdateCell(row, col);
                 GetNeighborValues(row, col);
                 blacklist.Add((row, col));
                 _score++;
@@ -102,7 +102,7 @@ namespace Tri.Views
             else if (_engine.GetCellValue(row, col) == 0)
             {
                 _engine.SetCellValue(row, col, 1);
-                _triangleRenderer.UpdateCell(row, col);
+                _avaloniaTrianglerenderer.UpdateCell(row, col);
                 GetNeighborValues(row, col);
                 blacklist.Add((row, col));
             }
@@ -110,7 +110,7 @@ namespace Tri.Views
             {
                 _engine.SetCellValue(row, col, 99);
                 _engine.GetCellValue(row, col);
-                _triangleRenderer.UpdateCell(row, col);
+                _avaloniaTrianglerenderer.UpdateCell(row, col);
                 blacklist.Add((row, col));
                 notPrimes.Add((row, col));
             }            
@@ -140,7 +140,7 @@ namespace Tri.Views
             //random neighbor for the prime
             var primeNeighbor = neighbors[random.Next(neighbors.Count)];
             _engine.SetCellValue(primeNeighbor.Item1, primeNeighbor.Item2, GenerateRandomPrime());
-            _triangleRenderer.UpdateCell(primeNeighbor.Item1, primeNeighbor.Item2);
+            _avaloniaTrianglerenderer.UpdateCell(primeNeighbor.Item1, primeNeighbor.Item2);
 
             //the rest are just numbers not primes
             foreach (var (nRow, nCol) in neighbors)
@@ -151,7 +151,7 @@ namespace Tri.Views
                 do { value = random.Next(2, 97);} while (IsPrime(value)); // repeat until its not regular number
 
                 _engine.SetCellValue(nRow, nCol, value);
-                _triangleRenderer.UpdateCell(nRow, nCol);
+                _avaloniaTrianglerenderer.UpdateCell(nRow, nCol);
             }
         }
 

@@ -8,6 +8,7 @@ using MemTest.Game;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using gLibrary.Rendering.AvaloniaRenderers;
 //ještě jednu hru
 //ve vytvoreni abstraktniho modelu popsat jen obecne oddeleni, proc gridengine je obecny atd...
 namespace MemTest.Views;
@@ -15,7 +16,7 @@ namespace MemTest.Views;
 public partial class MainWindow : Window
 {
     private GridEngine _engine;
-    private Renderer _renderer;
+    private AvaloniaSquareRenderer _avaloniaSquareRenderer;
     private SquareHelper _squareHelper;
     private SquareRenderer _squareRenderer;
     private MemMapper _mapper;
@@ -54,10 +55,10 @@ public partial class MainWindow : Window
                 _engine.SetCellValue(i, j, 0);
 
         _mapper = new MemMapper();
+        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(MemBackground);
         _squareHelper = new SquareHelper(_engine);
-        _squareRenderer = new SquareRenderer(MemBackground, _size, 0.5, _squareHelper, _engine, _mapper, OnClick);
-        _renderer = new Renderer(_squareRenderer);
-        _renderer.RenderGrid(_engine, _mapper, _size);
+        _squareRenderer = new SquareRenderer(_avaloniaSquareRenderer, _engine, _mapper , _squareHelper, _size);
+        _squareRenderer.RenderGrid();
     }
 
     public async void OnClick(object? sender, CellClickEventArgs args)
@@ -67,10 +68,10 @@ public partial class MainWindow : Window
         int col = args.Cell.Column;
         _playerInput.Add((row, col));
         _engine.SetCellValue(row, col, 1);
-        _squareRenderer.UpdateCell(row, col);
+        _avaloniaSquareRenderer.UpdateCell(row, col);
         await Task.Delay(200);
         _engine.SetCellValue(row, col, 0);
-        _squareRenderer.UpdateCell(row, col);
+        _avaloniaSquareRenderer.UpdateCell(row, col);
 
         if (_sequence[_currentStep] != (row, col))
         {
@@ -96,11 +97,11 @@ public partial class MainWindow : Window
         foreach (var (row, col) in _sequence)
         {
             _engine.SetCellValue(row, col, 1);
-            _squareRenderer.UpdateCell(row, col);
+            _avaloniaSquareRenderer.UpdateCell(row, col);
             await Task.Delay(600);
 
             _engine.SetCellValue(row, col, 0);
-            _squareRenderer.UpdateCell(row, col);
+            _avaloniaSquareRenderer.UpdateCell(row, col);
             await Task.Delay(200);
         }
 

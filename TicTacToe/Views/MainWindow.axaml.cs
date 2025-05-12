@@ -9,13 +9,14 @@ using gLibrary.Communication;
 using Avalonia.Threading;
 using gLibrary.Saves;
 using Avalonia.Interactivity;
+using gLibrary.Rendering.AvaloniaRenderers;
 
 namespace TicTacToe.Views;
 
 public partial class MainWindow : Window
 {
     private GridEngine _engine;
-    private Renderer _renderer;
+    private AvaloniaSquareRenderer _avaloniaSquareRenderer;
     private SquareHelper _squareHelper;
     private SquareRenderer _squareRenderer;
     private TicTacToeMapper _mapper;
@@ -47,9 +48,9 @@ public partial class MainWindow : Window
     {
         _mapper = new TicTacToeMapper();
         _squareHelper = new SquareHelper(_engine);
-        _squareRenderer = new SquareRenderer(TicTacToeBackground, _size, 0.5, _squareHelper, _engine, _mapper, OnClick);
-        _renderer = new Renderer(_squareRenderer);
-        _renderer.RenderGrid(_engine, _mapper, _size);
+        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(TicTacToeBackground);
+        _squareRenderer = new SquareRenderer(_avaloniaSquareRenderer, _engine, _mapper, _squareHelper, _size);
+        _squareRenderer.RenderGrid();
         _gameStateManager = new GameStateManager();
         _gameController = new GameController(_engine);
     }
@@ -62,7 +63,7 @@ public partial class MainWindow : Window
             Dispatcher.UIThread.InvokeAsync(() =>
             {
                 _gameController.MakeMove(row, col);
-                _squareRenderer.UpdateCell(row, col);
+                _avaloniaSquareRenderer.UpdateCell(row, col);
             });
         };
 
@@ -81,7 +82,7 @@ public partial class MainWindow : Window
         if (state != null)
         {
             _gameController.FromGameState(state);
-            _renderer.RenderGrid(_engine, _mapper, _size);
+            _squareRenderer.RenderGrid();
         }
     }
     public void OnClick(object? sender, CellClickEventArgs args)
@@ -93,7 +94,7 @@ public partial class MainWindow : Window
             _webSocketManager.Send(row, col);
         }
         _gameController.MakeMove(row, col);
-        _renderer.RenderGrid(_engine, _mapper, _size);
+        _squareRenderer.RenderGrid();
     }
     
     private void SaveButton_Click(object? sender, RoutedEventArgs e)
