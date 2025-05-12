@@ -27,7 +27,7 @@ public class AvaloniaSquareRenderer : Control, IRenderer
     public event EventHandler<CellHoverEventArgs>? CellHovered;
     private readonly Dictionary<(int row, int col), Panel> _cellVisuals = new();
 
-    public AvaloniaSquareRenderer(Canvas canvas, EventHandler<CellClickEventArgs>? OnClick = null, EventHandler<CellHoverEventArgs>? OnHover = null)
+    public AvaloniaSquareRenderer(Canvas canvas, GridEngine engine, IMap mapper, SquareHelper squareHelper, int cellSize, EventHandler<CellClickEventArgs>? OnClick = null, EventHandler<CellHoverEventArgs>? OnHover = null)
     {
         _canvas = canvas;
         //events
@@ -35,6 +35,10 @@ public class AvaloniaSquareRenderer : Control, IRenderer
         //_canvas.PointerEntered += OnPointerMoved;
         CellClicked = OnClick;
         CellHovered = OnHover;
+        _engine = engine;
+        _mapper = mapper;
+        _squareHelper = squareHelper;
+        _cellSize = cellSize;
     }
 
     public void Clear() => _canvas.Children.Clear();

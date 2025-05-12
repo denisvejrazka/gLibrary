@@ -55,8 +55,8 @@ public partial class MainWindow : Window
                 _engine.SetCellValue(i, j, 0);
 
         _mapper = new MemMapper();
-        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(MemBackground);
         _squareHelper = new SquareHelper(_engine);
+        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(MemBackground, _engine, _mapper, _squareHelper, _size, OnClick);
         _squareRenderer = new SquareRenderer(_avaloniaSquareRenderer, _engine, _mapper , _squareHelper, _size);
         _squareRenderer.RenderGrid();
     }

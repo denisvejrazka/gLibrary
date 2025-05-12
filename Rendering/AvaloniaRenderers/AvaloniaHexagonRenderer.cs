@@ -41,17 +41,28 @@ public class AvaloniaHexagonRenderer : Control, IRenderer
 
     public void RenderCell(int row, int col, Cell cell, int cellSize, (double x, double y) position)
     {
-        var rect = new Rectangle
+        double width = cellSize * 1.5;
+        double height = Math.Sqrt(3) * cellSize / 2;
+        var points = new List<Avalonia.Point>
         {
-            Width = cellSize,
-            Height = cellSize,
-            Fill = new SolidColorBrush(Color.Parse(cell.Fill)),
-            Stroke = Brushes.Black,
-            StrokeThickness = 0.5,
+            new Avalonia.Point(cellSize * 0.5, 0),
+            new Avalonia.Point(cellSize * 1.5, 0),
+            new Avalonia.Point(cellSize * 2, height),
+            new Avalonia.Point(cellSize * 1.5, height * 2),
+            new Avalonia.Point(cellSize * 0.5, height * 2),
+            new Avalonia.Point(0, height)
         };
 
-        var panel = new Panel { Width = cellSize, Height = cellSize };
-        panel.Children.Add(rect);
+        var hexagon = new Polygon
+        {
+            Points = points,
+            Fill = new SolidColorBrush(Color.Parse(cell.Fill)),
+            Stroke = Brushes.Black,
+            StrokeThickness = 0.5
+        };
+
+        var panel = new Panel { Width = width, Height = height };
+        panel.Children.Add(hexagon);
 
         if (!string.IsNullOrEmpty(cell.Raster))
         {

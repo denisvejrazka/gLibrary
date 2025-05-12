@@ -57,7 +57,7 @@ namespace Tri.Views
 
             _mapper = new TriMapper();
             _triangleHelper = new TriangleHelper(_engine);
-            _avaloniaTrianglerenderer = new AvaloniaTriangleRenderer(TriBackground);
+            _avaloniaTrianglerenderer = new AvaloniaTriangleRenderer(TriBackground, _engine, _mapper, _triangleHelper, _size, OnClick);
             _triangleRenderer = new TriangleRenderer(_avaloniaTrianglerenderer, _engine, _mapper, _triangleHelper, _size);
             _triangleRenderer.RenderGrid();
         }

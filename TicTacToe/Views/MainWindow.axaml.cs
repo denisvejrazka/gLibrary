@@ -48,7 +48,7 @@ public partial class MainWindow : Window
     {
         _mapper = new TicTacToeMapper();
         _squareHelper = new SquareHelper(_engine);
-        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(TicTacToeBackground);
+        _avaloniaSquareRenderer = new AvaloniaSquareRenderer(TicTacToeBackground, _engine, _mapper, _squareHelper, _size);
         _squareRenderer = new SquareRenderer(_avaloniaSquareRenderer, _engine, _mapper, _squareHelper, _size);
         _squareRenderer.RenderGrid();
         _gameStateManager = new GameStateManager();

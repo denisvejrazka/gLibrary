@@ -76,6 +76,3 @@
 /Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/Tri.csproj.Up2Date
 /Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/Tri.genruntimeconfig.cache
 /Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/ref/Tri.dll
-/Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/Tri.dll
-/Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/refint/Tri.dll
-/Users/denisvejrazka/Projects/gLibrary/Tri/obj/Debug/net8.0/Tri.pdb

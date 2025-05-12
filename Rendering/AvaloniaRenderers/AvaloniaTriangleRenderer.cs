@@ -17,17 +17,17 @@ namespace gLibrary.Rendering.AvaloniaRenderers;
 public class AvaloniaTriangleRenderer : Control, IRenderer
 {
     private readonly Canvas _canvas;
-    private TriangleHelper _squareHelper;
+    private TriangleHelper _triangleHelper;
     private GridEngine _engine;
     private int _cellSize;
     private IMap _mapper;
-
+    
     //events
     public event EventHandler<CellClickEventArgs>? CellClicked;
     public event EventHandler<CellHoverEventArgs>? CellHovered;
     private readonly Dictionary<(int row, int col), Panel> _cellVisuals = new();
 
-    public AvaloniaTriangleRenderer(Canvas canvas, EventHandler<CellClickEventArgs>? OnClick = null, EventHandler<CellHoverEventArgs>? OnHover = null)
+    public AvaloniaTriangleRenderer(Canvas canvas, GridEngine engine, IMap mapper, TriangleHelper helper, int size, EventHandler<CellClickEventArgs>? OnClick = null, EventHandler<CellHoverEventArgs>? OnHover = null)
     {
         _canvas = canvas;
         //events
@@ -35,23 +35,43 @@ public class AvaloniaTriangleRenderer : Control, IRenderer
         //_canvas.PointerEntered += OnPointerMoved;
         CellClicked = OnClick;
         CellHovered = OnHover;
+        _engine = engine;
+        _mapper = mapper;
+        _triangleHelper = helper;
+        _cellSize = size;
     }
 
     public void Clear() => _canvas.Children.Clear();
 
     public void RenderCell(int row, int col, Cell cell, int cellSize, (double x, double y) position)
     {
-        var rect = new Rectangle
+        var points = new List<Avalonia.Point>();
+        double height = Math.Sqrt(3) / 2 * cellSize;
+        bool isUpward = (row + col) % 2 == 0;
+
+        if (isUpward)
         {
-            Width = cellSize,
-            Height = cellSize,
+            points.Add(new Avalonia.Point(0, height));
+            points.Add(new Avalonia.Point(cellSize / 2, 0));
+            points.Add(new Avalonia.Point(cellSize, height));
+        }
+        else
+        {
+            points.Add(new Avalonia.Point(0, 0));
+            points.Add(new Avalonia.Point(cellSize, 0));
+            points.Add(new Avalonia.Point(cellSize / 2, height));
+        }
+
+        var triangle = new Polygon
+        {
+            Points = points,
             Fill = new SolidColorBrush(Color.Parse(cell.Fill)),
             Stroke = Brushes.Black,
-            StrokeThickness = 0.5,
+            StrokeThickness = 0.3
         };
 
         var panel = new Panel { Width = cellSize, Height = cellSize };
-        panel.Children.Add(rect);
+        panel.Children.Add(triangle);
 
         if (!string.IsNullOrEmpty(cell.Raster))
         {
@@ -90,7 +110,7 @@ public class AvaloniaTriangleRenderer : Control, IRenderer
 
         var cell = _mapper.GetMap(value, row, col);
 
-        var position = _squareHelper.GetPosition(row, col, _cellSize);
+        var position = _triangleHelper.GetPosition(row, col, _cellSize);
 
         if (_cellVisuals.TryGetValue((row, col), out var oldPanel))
         {
@@ -104,7 +124,7 @@ public class AvaloniaTriangleRenderer : Control, IRenderer
     private void OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         var point = e.GetPosition(_canvas);
-        var cellCoords = _squareHelper.GetCellCoordinatesFromPixel(point.X, point.Y, _cellSize);
+        var cellCoords = _triangleHelper.GetCellCoordinatesFromPixel(point.X, point.Y, _cellSize);
         Cell cell = _mapper.GetMap(
             _engine.GetCellValue(cellCoords.Value.row, cellCoords.Value.col),
             cellCoords.Value.row,
@@ -123,7 +143,7 @@ public class AvaloniaTriangleRenderer : Control, IRenderer
     //private void OnPointerMoved(object? sender, PointerEventArgs e)
     //{
     //    var point = e.GetPosition(_canvas);
-    //    var cellCoords = _squareHelper.GetCellCoordinatesFromPixel(point.X, point.Y, _cellSize);
+    //    var cellCoords = _triangleHelper.GetCellCoordinatesFromPixel(point.X, point.Y, _cellSize);
     //    Cell cell = _mapper.GetMap(_engine.GetCellValue(cellCoords.Value.row, cellCoords.Value.col), cellCoords.Value.row, cellCoords.Value.col);
 
     //    if (cell != null)

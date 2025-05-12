@@ -76,3 +76,6 @@
 /Users/denisvejrazka/Projects/gLibrary/MemTest/bin/Debug/net8.0/Websocket.Client.dll
 /Users/denisvejrazka/Projects/gLibrary/MemTest/bin/Debug/net8.0/gLibrary.dll
 /Users/denisvejrazka/Projects/gLibrary/MemTest/bin/Debug/net8.0/gLibrary.pdb
+/Users/denisvejrazka/Projects/gLibrary/MemTest/obj/Debug/net8.0/MemTest.dll
+/Users/denisvejrazka/Projects/gLibrary/MemTest/obj/Debug/net8.0/refint/MemTest.dll
+/Users/denisvejrazka/Projects/gLibrary/MemTest/obj/Debug/net8.0/MemTest.pdb
